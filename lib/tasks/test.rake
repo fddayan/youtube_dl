@@ -1,8 +1,8 @@
 require_relative "../youtube_dl"
 
-namespace :test do
+namespace :youtube_dl do
   desc "Run all youtube_dl tests."
-  task :youtube_dl do
+  task :test do
     if ARGV[1]
       require_relative(ARGV[1])
     else
@@ -11,6 +11,3 @@ namespace :test do
     end
   end
 end
-
-desc "Run all youtube_dl tests."
-task :test => "test:youtube_dl"
