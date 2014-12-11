@@ -4,8 +4,10 @@ require 'uri'
 require 'cgi'
 
 module YoutubeDl
+  ROOT_PATH = File.expand_path('../../', __FILE__)
+
   class YoutubeVideo
-    YOUTUBE_DL = File.join(File.expand_path(File.dirname(__FILE__)), "../bin/youtube-dl")
+    YOUTUBE_DL = "#{ROOT_PATH}/bin/youtube-dl"
 
     FORMATS = {
       38  => { ext: "mp4"  }, # [3072x4096]
