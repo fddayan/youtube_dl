@@ -11,7 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder '.', '/home/vagrant/youtubedl'
   config.vm.provision :shell, {
     privileged: false,
-    inline: 'cd /home/vagrant/youtubedl; ./provisioning/setup.sh'
+    inline: 'cd /home/vagrant/youtubedl; ./bin/provisioning/setup.sh'
   }
 
 end
