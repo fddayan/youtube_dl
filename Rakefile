@@ -5,4 +5,4 @@ Bundler::GemHelper.install_tasks
 
 require_relative "lib/youtube_dl"
 
-Dir["#{YoutubeDl::ROOT_PATH}/lib/tasks/*.rake"].each { |file| load(file) }
+YoutubeDl.load_rake_tasks

@@ -6,6 +6,11 @@ require 'cgi'
 module YoutubeDl
   ROOT_PATH = File.expand_path('../../', __FILE__)
 
+  def self.load_rake_tasks
+    path = "#{YoutubeDl::ROOT_PATH}/lib/tasks/*.rake"
+    Dir[path].each { |file| load(file) }
+  end
+
   class YoutubeVideo
     YOUTUBE_DL = "#{ROOT_PATH}/bin/youtube-dl"
 

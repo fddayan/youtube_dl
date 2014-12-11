@@ -1,14 +1,16 @@
 require_relative "../youtube_dl"
 
 namespace :test do
-  desc "Run all tests."
-  task :run do
+  desc "Run all youtube_dl tests."
+  task :youtube_dl do
     if ARGV[1]
       require_relative(ARGV[1])
     else
-      Dir.glob("#{YoutubeDl::ROOT_PATH}/spec/**/*_spec.rb").each { |file| require file }
+      paths = "#{YoutubeDl::ROOT_PATH}/spec/**/*_spec.rb"
+      Dir.glob(paths).each { |file| require file }
     end
   end
 end
 
-task :test => "test:run"
+desc "Run all youtube_dl tests."
+task :test => "test:youtube_dl"
