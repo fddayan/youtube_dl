@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{This is a wrapper for youtube_dl}
   gem.homepage      = ''
 
-  gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  gem.executables   = `git ls-files -- {bin,provisioning}/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
 
@@ -17,4 +17,6 @@ Gem::Specification.new do |gem|
   gem.version       = YoutubeDl::VERSION
 
   gem.add_dependency "httparty"
+  gem.add_development_dependency "rake"
+  gem.add_development_dependency "minitest"
 end
