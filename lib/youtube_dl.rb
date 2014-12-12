@@ -100,16 +100,34 @@ module YoutubeDl
 
       filename = video_filename
 
-      args = [youtube_dl_binary]
-      if !@debug
-        args.push '-q', '--no-progress'
-      end
-      args.push '-o', filename, '-f', format_argument, '--restrict-filenames', @uri.to_s
-
-      quiet = @debug ? '' : '-q'
+      args = system_args(filename, format_argument)
       system(*args)
+
       # TODO: Fix video_filename for non-mp4 files.
       filename if File.exist?(filename)
+    end
+
+    # Get an array to send as system arguments to the youtube_dl binary.
+    #
+    # @param filename [String]
+    # @param format [String]
+    #
+    # @return args [Array]
+    def system_args(filename, format)
+      [youtube_dl_binary].tap do |args|
+        args.push '-q', '--no-progress' unless @debug
+        args.push(
+          # What to name the file locally.
+          '-o', filename,
+          # YouTube format code.
+          '-f', format,
+          # Don't use stupid characters for the local filename.
+          '--restrict-filenames',
+          # Only download the linked video, not every video in the playlist.
+          '--no-playlist',
+          @uri.to_s
+        )
+      end
     end
 
     def download_preview(options = {})
