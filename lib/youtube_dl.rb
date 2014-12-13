@@ -44,20 +44,45 @@ module YoutubeDl
       139 => { ext: "m4a",  only: "audio" }  #  48k (22050Hz)
     }
 
-    def self.add_formats(formats)
-      FORMATS.merge!(formats)
-    end
+    module ClassMethods
+      def add_formats(formats)
+        FORMATS.merge!(formats)
+      end
 
-    def self.get_format_argument(video_code, audio_code = nil)
-      if audio_code.nil?
-        video_code.to_s
-      else
-        "#{video_code}+#{audio_code}"
+      def get_format_argument(video_code, audio_code = nil)
+        if audio_code.nil?
+          video_code.to_s
+        else
+          "#{video_code}+#{audio_code}"
+        end
+      end
+
+      # Given a URI, get the YouTube video ID.
+      #
+      # @param uri [URI]
+      #
+      # @return video_id [String]
+      def get_video_id(uri)
+        if uri.to_s =~ /^https?\:\/\/(?:www\.)?youtube\.com\/watch/
+          params(uri.query)['v'].first
+        elsif uri.to_s =~ /^https?\:\/\/(?:www\.)?youtu\.be\/([\w_-]+)/
+          $1
+        end
+      end
+
+      def params(body)
+        CGI.parse(body)
       end
     end
+    extend ClassMethods
+
+
+    attr_reader :video_id
+
 
     def initialize(page_uri, options = {})
-      @uri = URI.parse page_uri
+      @uri = URI.parse(page_uri)
+      @video_id = self.class.get_video_id(@uri)
       @location = options[:location] || "tmp/downloads" # default path
       @format = options[:format] || 18                  # default format
       @audio_format = options[:audio_format]            # default audio_format
@@ -67,10 +92,6 @@ module YoutubeDl
 
     def youtube_dl_binary
       @youtube_dl_binary
-    end
-
-    def video_id
-      params(@uri.query)['v'].first
     end
 
     def title
@@ -151,13 +172,7 @@ module YoutubeDl
     end
 
     def extended_info_body
-      params(extended_info.body)
-    end
-
-    private
-
-    def params(body)
-      CGI.parse(body)
+      self.class.params(extended_info.body)
     end
 
   end

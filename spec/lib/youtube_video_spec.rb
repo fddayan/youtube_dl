@@ -1,6 +1,43 @@
 require_relative "../spec_helper"
 
 describe YoutubeDl::YoutubeVideo do
+
+  def youtube(url)
+    YoutubeDl::YoutubeVideo.new(url, {
+      debug: true
+    })
+  end
+
+  describe "#video_id" do
+    %w[
+      -5FKNViujeM
+      IeyPqo1t3jM
+      jYfdmWg_EMM
+      6gRW1h_hyoY
+      _mowP-DCh8_
+      __-_--_--_-
+      tKTZoB2Vjuk
+      uiT0fBePR0Q
+    ].each do |youtube_id|
+      %W[
+        http://www.youtube.com/watch?v=#{youtube_id}
+        https://www.youtube.com/watch?v=#{youtube_id}
+        https://www.youtube.com/watch?v=#{youtube_id}&wha=wha
+        http://youtube.com/watch?v=#{youtube_id}&list=#wha
+        http://youtu.be/#{youtube_id}
+        http://www.youtu.be/#{youtube_id}?wha=wha
+        https://youtu.be/#{youtube_id}
+      ].each do |url|
+        describe "when url is #{url}" do
+          it "video_id is #{youtube_id}" do
+            result = youtube(url).video_id
+            assert_equal(youtube_id, result)
+          end
+        end
+      end
+    end
+  end
+
   describe "#get_format_argument" do
     [
       [22, 45, "22+45"],
@@ -13,12 +50,6 @@ describe YoutubeDl::YoutubeVideo do
         end
       end
     end
-  end
-
-  def youtube(url)
-    YoutubeDl::YoutubeVideo.new(url, {
-      debug: true
-    })
   end
 
   def assert_valid_download(file_path)
@@ -54,21 +85,26 @@ describe YoutubeDl::YoutubeVideo do
       ]
 
       youtube_ids.each do |youtube_id|
-        video_url = "https://www.youtube.com/watch?v=#{youtube_id}"
         expected_file_path = "tmp/downloads/#{youtube_id}.mp4"
 
-        describe "when the url is #{video_url}" do
-          # Print available video codecs
-          # get_available_formats(video_url)
-          it "muxes the video and audio together into one file" do
-            begin
-              # The library prints to the console.
-              result = youtube(video_url).download_best
-              assert_equal(expected_file_path, result)
-              assert_valid_download(result)
-            ensure
-              # Delete the file after.
-              File.unlink(File.new(expected_file_path)) if result
+        %W[
+          https://www.youtube.com/watch?v=#{youtube_id}
+          http://youtu.be/#{youtube_id}
+        ].each do |video_url|
+
+          describe "when the url is #{video_url}" do
+            # Print available video codecs
+            # get_available_formats(video_url)
+            it "muxes the video and audio together into one file" do
+              begin
+                # The library prints to the console.
+                result = youtube(video_url).download_best
+                assert_equal(expected_file_path, result)
+                assert_valid_download(result)
+              ensure
+                # Delete the file after.
+                File.unlink(File.new(expected_file_path)) if result
+              end
             end
           end
         end
