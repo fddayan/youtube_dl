@@ -119,12 +119,12 @@ module YoutubeDl
       audio_format_code = (options[:audio_format] || @audio_format)
       format_argument = self.class.get_format_argument(video_format_code, audio_format_code)
 
-      filename = video_filename
 
-      args = system_args(filename, format_argument)
+      args = system_args(tmp_filename, format_argument)
       system(*args)
 
-      # TODO: Fix video_filename for non-mp4 files.
+      filename = video_filename
+
       filename if File.exist?(filename)
     end
 
@@ -167,13 +167,27 @@ module YoutubeDl
       preview_filename if File.exist?(preview_filename)
     end
 
+    # TODO: don't always name .jpg
     def preview_filename
       File.join(@location, "#{video_id}.jpg")
     end
 
-    # TODO: don't always name .mp4
+    # Check existing files for one matching the video id, with any extension.
+    # If none found, return video id with mp4 extension.
+    #
+    # @return [String]
+    #
+    # @example
+    #   igCpDUju7Qw.mp4
+    #   3HYn2CFSdsg.mkv
     def video_filename
-      File.join(@location, "#{video_id}.mp4")
+      Dir[File.join(@location, "#{video_id}.*")].find do |filename|
+        File.basename(filename, ".*") == video_id
+      end || File.join(@location, "#{video_id}.mp4")
+    end
+
+    def tmp_filename
+      File.join(@location, video_id)
     end
 
     def extended_info_body

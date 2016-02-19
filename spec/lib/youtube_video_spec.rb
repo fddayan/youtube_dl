@@ -8,6 +8,10 @@ describe YoutubeDl::YoutubeVideo do
     })
   end
 
+  def cleanup_file(path)
+    File.unlink(File.new(path)) if File.exists?(path)
+  end
+
   describe "#video_id" do
     %w[
       -5FKNViujeM
@@ -66,16 +70,20 @@ describe YoutubeDl::YoutubeVideo do
   describe "#download_best" do
     describe "when using a single video link" do
       youtube_ids = [
+
+        # mkv output
+        ["igCpDUju7Qw", "mkv"],
+
         # 1080p
-        "y4QQbdQ0DT8",
-        # "s3Qm6PjU_cs",
-        # "VZeDkRcBW9Y",
+        ["y4QQbdQ0DT8", "mp4"],
+        # ["s3Qm6PjU_cs", "mp4"],
+        # ["VZeDkRcBW9Y", "mp4"],
 
         # 720p
-        "moCbcan7cSM",
+        ["moCbcan7cSM", "mp4"],
 
         # 480p
-        "MAsrDu3pL2g",
+        ["MAsrDu3pL2g", "mp4"],
 
         # 360p
         # TODO: let 360p downloads work with "bestvideo", "bestaudio"
@@ -84,8 +92,8 @@ describe YoutubeDl::YoutubeVideo do
         # "9AfHAfhrWBg",
       ]
 
-      youtube_ids.each do |youtube_id|
-        expected_file_path = "tmp/downloads/#{youtube_id}.mp4"
+      youtube_ids.each do |(youtube_id, extension)|
+        expected_file_path = "tmp/downloads/#{youtube_id}.#{extension}"
 
         %W[
           https://www.youtube.com/watch?v=#{youtube_id}
@@ -103,7 +111,7 @@ describe YoutubeDl::YoutubeVideo do
                 assert_valid_download(result)
               ensure
                 # Delete the file after.
-                File.unlink(File.new(expected_file_path)) if result
+                cleanup_file(expected_file_path)
               end
             end
           end
@@ -131,7 +139,7 @@ describe YoutubeDl::YoutubeVideo do
               assert_equal(1, Dir["tmp/downloads/*"].size, "More than 1 file was downloaded.")
             ensure
               # Delete the file after.
-              File.unlink(File.new(expected_file_path)) if result
+              cleanup_file(expected_file_path)
             end
           end
         end
