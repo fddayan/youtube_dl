@@ -107,11 +107,11 @@ module YoutubeDl
     end
 
     # Download the best quality available and mux with ffmpeg if needed.
-    def download_best
+    def download_best(options = {})
       download_video({
         :format => "bestvideo",
         :audio_format => "bestaudio"
-      })
+      }.merge(options))
     end
 
     def download_video(options = {})
@@ -136,7 +136,12 @@ module YoutubeDl
     # @return args [Array]
     def system_args(filename, format)
       [youtube_dl_binary].tap do |args|
-        args.push '-q', '--no-progress' unless @debug
+        if @debug
+          args.push '-v'
+        else
+          args.push '-q', '--no-progress'
+        end
+
         args.push(
           # What to name the file locally.
           '-o', filename,
