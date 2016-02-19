@@ -8,9 +8,10 @@ set -e -u -x
 ## Install ubuntu packages
 sudo apt-get update
 sudo apt-get -y install htop build-essential git libpq-dev curl libpcre3-dev
+sudo apt-get -y install libreadline6 libreadline6-dev
 ## -----------------------------------------------------------
 
-./install_ffmpeg.sh
+./bin/provisioning/install_ffmpeg.sh
 
 ## Install rbenv, ruby and basic gems
 cd ~
@@ -23,8 +24,8 @@ mkdir -p ~/.rbenv/plugins
 cd ~/.rbenv/plugins
 git clone git://github.com/sstephenson/ruby-build.git
 cd $PROJECT_ROOT
-rbenv install 2.1.0
-rbenv global 2.1.0
+rbenv install 2.1.2
+rbenv global 2.1.2
 
 cat > ~/.gemrc <<GEMRC
 ---
