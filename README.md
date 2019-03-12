@@ -9,6 +9,9 @@ This is a youtube_dl video downloader wrapper.
     >> preview = youtube.download_preview
     => "tmp/downloads/zzG4K2m_j5U.jpg"
 
+## Updating Binary
+    Running `sh update-bin.sh` will update `bin/youtube_dl` automattically. If there is an error you will need to go to the [download page](https://rg3.github.io/youtube-dl/download.html) and update manually.
+
 ## Changelog
 
 ### 0.0.2

@@ -17,3 +17,4 @@ tmp
 .ruby-version
 .ruby-gemset
 .vagrant/
+.DS_Store
