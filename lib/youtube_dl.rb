@@ -146,7 +146,7 @@ module YoutubeDl
           # What to name the file locally.
           '-o', filename,
           # YouTube format code.
-          '-f', format,
+          '--merge-output-format', format,
           # Don't use stupid characters for the local filename.
           '--restrict-filenames',
           # Only download the linked video, not every video in the playlist.
